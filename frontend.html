@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iCar Plus - Inventario</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <h1>iCar Plus - Inventario</h1>
+
+    <form id="registroForm" enctype="multipart/form-data">
+        Descripción: <input type="text" id="descripcion" required><br>
+        Imagen: <input type="file" id="imagen" accept="image/*" required><br>
+        Marca: <input type="text" id="marca" required><br>
+        Modelo: <input type="text" id="modelo" required><br>
+        Tipo: <input type="text" id="tipo" required><br>
+        Año: <input type="text" pattern="\d*" id="año" required><br>
+        <!-- El atributo "pattern" permite solo dígitos -->
+        ID del Vehículo a Modificar: <input type="number" id="idModificar" required><br>
+        ID del Vehículo a Eliminar: <input type="number" id="idEliminar" required><br>
+
+        <button type="button" onclick="registrarVehiculo()">Registrar</button>
+        <button type="button" onclick="modificarVehiculo()">Modificar</button>
+        <button type="button" onclick="eliminarVehiculo()">Eliminar</button>
+        <button type="button" onclick="consultarVehiculos()">Consultar</button>
+    </form>
+
+    <div id="resultados"></div>
+
+    <script>
+        function registrarVehiculo() {
+            // Obtener valores de los campos
+            var descripcion = $("#descripcion").val();
+            var imagen = $("#imagen")[0].files[0];
+            var marca = $("#marca").val();
+            var modelo = $("#modelo").val();
+            var tipo = $("#tipo").val();
+            var año = $("#año").val();
+
+            // Enviar datos al backend para el registro
+            $.ajax({
+                type: "POST",
+                url: "backend.php",
+                data: {
+                    action: "registrar",
+                    descripcion: descripcion,
+                    imagen: imagen,
+                    marca: marca,
+                    modelo: modelo,
+                    tipo: tipo,
+                    año: año
+                },
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    $("#resultados").html(response);
+                }
+            });
+        }
+
+        function modificarVehiculo() {
+            // Obtener valores de los campos
+            var idModificar = $("#idModificar").val();
+            var descripcion = $("#descripcion").val();
+            var imagen = $("#imagen")[0].files[0];
+            var marca = $("#marca").val();
+            var modelo = $("#modelo").val();
+            var tipo = $("#tipo").val();
+            var año = $("#año").val();
+
+            // Enviar datos al backend para la modificación
+            $.ajax({
+                type: "POST",
+                url: "backend.php",
+                data: {
+                    action: "modificar",
+                    id: idModificar,
+                    descripcion: descripcion,
+                    imagen: imagen,
+                    marca: marca,
+                    modelo: modelo,
+                    tipo: tipo,
+                    año: año
+                },
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    $("#resultados").html(response);
+                }
+            });
+        }
+
+        function eliminarVehiculo() {
+            // Obtener el ID del vehículo a eliminar
+            var idEliminar = $("#idEliminar").val();
+
+            // Enviar datos al backend para la eliminación
+            $.ajax({
+                type: "POST",
+                url: "backend.php",
+                data: {
+                    action: "eliminar",
+                    id: idEliminar
+                },
+                success: function(response) {
+                    $("#resultados").html(response);
+                }
+            });
+        }
+
+        function consultarVehiculos() {
+            // Enviar solicitud al backend para obtener la lista de vehículos
+            $.ajax({
+                type: "POST",
+                url: "backend.php",
+                data: {
+                    action: "consultar"
+                },
+                success: function(response) {
+                    $("#resultados").html(response);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

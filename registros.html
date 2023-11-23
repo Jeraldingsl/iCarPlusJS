@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iCar Plus - Inventario</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <h1>iCar Plus - Inventario</h1>
+
+    <form id="registroForm" enctype="multipart/form-data">
+        <!-- ... Campos existentes ... -->
+
+        <!-- Nuevos campos para modificación y eliminación -->
+        ID del Vehículo a Modificar: <input type="number" id="idModificar" required><br>
+        ID del Vehículo a Eliminar: <input type="number" id="idEliminar" required><br>
+
+        <button type="button" onclick="registrarVehiculo()">Registrar</button>
+        <button type="button" onclick="modificarVehiculo()">Modificar</button>
+        <button type="button" onclick="eliminarVehiculo()">Eliminar</button>
+        <button type="button" onclick="consultarVehiculos()">Consultar</button>
+    </form>
+
+    <div id="resultados"></div>
+
+    <script>
+        // Función para modificar un vehículo
+        function modificarVehiculo() {
+            var idModificar = $("#idModificar").val();
+            // Obtener los demás datos que se desean modificar
+            // ...
+
+            $.ajax({
+                type: "POST",
+                url: "backend.php",
+                data: {
+                    action: "modificar",
+                    id: idModificar,
+                    // Otros datos a modificar
+                    // ...
+                },
+                success: function(response) {
+                    $("#resultados").html(response);
+                }
+            });
+        }
+
+        // Función para eliminar un vehículo
+        function eliminarVehiculo() {
+            var idEliminar = $("#idEliminar").val();
+
+            $.ajax({
+                type: "POST",
+                url: "backend.php",
+                data: {
+                    action: "eliminar",
+                    id: idEliminar
+                },
+                success: function(response) {
+                    $("#resultados").html(response);
+                }
+            });
+        }
+
+        // Función para consultar todos los vehículos
+        function consultarVehiculos() {
+            $.ajax({
+                type: "POST",
+                url: "backend.php",
+                data: {
+                    action: "consultar"
+                },
+                success: function(response) {
+                    $("#resultados").html(response);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
